@@ -12,12 +12,11 @@ public class Matricula {
     @Id
     private String id;
 
+    // Vínculos com outras coleções
     private String alunoId;
-
     private String turmaId;
 
     private LocalDate data;
-
     private String situacao;
 
     private List<Nota> notas;

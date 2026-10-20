@@ -12,8 +12,4 @@ public interface MatriculaRepository
     List<Matricula> findByAlunoId(String alunoId);
 
     boolean existsByAlunoId(String alunoId);
-
-    List<Matricula> findByTurmaId(String turmaId);
-
-    boolean existsByTurmaId(String turmaId);
 }

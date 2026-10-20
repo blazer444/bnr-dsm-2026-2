@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.fatecfranca.api.dtos.TurmaResponse;
 import br.edu.fatecfranca.api.models.Turma;
 import br.edu.fatecfranca.api.services.TurmaService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/turmas")
@@ -30,26 +27,19 @@ public class TurmaController {
     }
 
     @GetMapping
-    public List<TurmaResponse> listarTodos() {
-        return service.listarComDetalhes();
+    public List<Turma> listarTodos() {
+        return service.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TurmaResponse> buscarPorId(
-            @PathVariable String id) {
-        return service.buscarComDetalhes(id)
+    public ResponseEntity<Turma> buscarPorId(@PathVariable String id) {
+        return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/curso/{cursoId}")
-    public List<TurmaResponse> listarPorCurso(
-            @PathVariable String cursoId) {
-        return service.listarPorCursoComDetalhes(cursoId);
-    }
-
     @PostMapping
-    public ResponseEntity<Turma> criar(@Valid @RequestBody Turma turma) {
+    public ResponseEntity<Turma> criar(@RequestBody Turma turma) {
         Turma turmaSalva = service.salvar(turma);
 
         return ResponseEntity
@@ -60,7 +50,7 @@ public class TurmaController {
     @PutMapping("/{id}")
     public ResponseEntity<Turma> atualizar(
             @PathVariable String id,
-            @Valid @RequestBody Turma turma) {
+            @RequestBody Turma turma) {
 
         if (service.buscarPorId(id).isEmpty()) {
             return ResponseEntity.notFound().build();

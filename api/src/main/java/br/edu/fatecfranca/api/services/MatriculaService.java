@@ -10,30 +10,16 @@ import org.springframework.web.server.ResponseStatusException;
 import br.edu.fatecfranca.api.models.Matricula;
 import br.edu.fatecfranca.api.repositories.AlunoRepository;
 import br.edu.fatecfranca.api.repositories.MatriculaRepository;
-import br.edu.fatecfranca.api.repositories.TurmaRepository;
 
 @Service
 public class MatriculaService {
 
     private final MatriculaRepository repository;
     private final AlunoRepository alunoRepository;
-    private final TurmaRepository turmaRepository;
 
-    public MatriculaService(MatriculaRepository repository, AlunoRepository alunoRepository,
-            TurmaRepository turmaRepository) {
+    public MatriculaService(MatriculaRepository repository, AlunoRepository alunoRepository) {
         this.repository = repository;
         this.alunoRepository = alunoRepository;
-        this.turmaRepository = turmaRepository;
-    }
-
-    private void verificarTurma(String turmaId) {
-        if (turmaId == null || turmaId.isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "O identificador da turma é obrigatório.");
-        }
-        if (!turmaRepository.existsById(turmaId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Turma não encontrada.");
-        }
     }
 
     private void verificarAluno(String alunoId) {
@@ -65,13 +51,7 @@ public class MatriculaService {
 
     public Matricula salvar(Matricula matricula) {
         verificarAluno(matricula.getAlunoId());
-        verificarTurma(matricula.getTurmaId());
         return repository.save(matricula);
-    }
-
-    public List<Matricula> listarPorTurma(String turmaId) {
-        verificarTurma(turmaId);
-        return repository.findByTurmaId(turmaId);
     }
 
     public void excluir(String id) {
