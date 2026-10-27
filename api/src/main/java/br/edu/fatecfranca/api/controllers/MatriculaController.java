@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.fatecfranca.api.dtos.MatriculaResponse;
 import br.edu.fatecfranca.api.models.Matricula;
 import br.edu.fatecfranca.api.services.MatriculaService;
 
@@ -27,13 +28,13 @@ public class MatriculaController {
     }
 
     @GetMapping
-    public List<Matricula> listarTodos() {
-        return service.listarTodos();
+    public List<MatriculaResponse> listarTodos() {
+        return service.listarComDetalhes();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Matricula> buscarPorId(@PathVariable String id) {
-        return service.buscarPorId(id)
+    public ResponseEntity<MatriculaResponse> buscarPorId(@PathVariable String id) {
+        return service.buscarComDetalhes(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

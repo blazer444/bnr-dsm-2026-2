@@ -6,19 +6,39 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
 @Document(collection = "turmas")
 public class Turma {
 
     @Id
     private String id;
 
-    // Vínculos com outras coleções (guardam apenas o _id)
     private String cursoId;
     private String instrutorId;
 
+    @NotNull(message = "A data inicial é obrigatória.")
     private LocalDate inicio;
+
+    @NotNull(message = "A data final é obrigatória.")
     private LocalDate fim;
+
+    @NotNull(message = "O número de vagas é obrigatório.")
+    @Positive(message = "O número de vagas deve ser maior que zero.")
     private Integer vagas;
+
+    @NotBlank(message = "O status é obrigatório.")
+    @Pattern(
+        regexp = "PREVISTA|ATIVA|ENCERRADA|CANCELADA",
+        message = "O status deve ser PREVISTA, ATIVA, ENCERRADA ou CANCELADA."
+    )
+    private String status;
 
     private List<Horario> horarios;
 
@@ -32,6 +52,7 @@ public class Turma {
             LocalDate inicio,
             LocalDate fim,
             Integer vagas,
+            String status,
             List<Horario> horarios) {
         this.id = id;
         this.cursoId = cursoId;
@@ -39,62 +60,42 @@ public class Turma {
         this.inicio = inicio;
         this.fim = fim;
         this.vagas = vagas;
+        this.status = status;
         this.horarios = horarios;
     }
 
-    public String getId() {
-        return id;
+    // Validação que compara dois atributos
+    @JsonIgnore
+    @AssertTrue(message = "A data final não pode ser anterior à data inicial.")
+    public boolean isPeriodoValido() {
+        if (inicio == null || fim == null) {
+            return true;
+        }
+
+        return !fim.isBefore(inicio);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getCursoId() {
-        return cursoId;
-    }
+    public String getCursoId() { return cursoId; }
+    public void setCursoId(String cursoId) { this.cursoId = cursoId; }
 
-    public void setCursoId(String cursoId) {
-        this.cursoId = cursoId;
-    }
+    public String getInstrutorId() { return instrutorId; }
+    public void setInstrutorId(String instrutorId) { this.instrutorId = instrutorId; }
 
-    public String getInstrutorId() {
-        return instrutorId;
-    }
+    public LocalDate getInicio() { return inicio; }
+    public void setInicio(LocalDate inicio) { this.inicio = inicio; }
 
-    public void setInstrutorId(String instrutorId) {
-        this.instrutorId = instrutorId;
-    }
+    public LocalDate getFim() { return fim; }
+    public void setFim(LocalDate fim) { this.fim = fim; }
 
-    public LocalDate getInicio() {
-        return inicio;
-    }
+    public Integer getVagas() { return vagas; }
+    public void setVagas(Integer vagas) { this.vagas = vagas; }
 
-    public void setInicio(LocalDate inicio) {
-        this.inicio = inicio;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public LocalDate getFim() {
-        return fim;
-    }
-
-    public void setFim(LocalDate fim) {
-        this.fim = fim;
-    }
-
-    public Integer getVagas() {
-        return vagas;
-    }
-
-    public void setVagas(Integer vagas) {
-        this.vagas = vagas;
-    }
-
-    public List<Horario> getHorarios() {
-        return horarios;
-    }
-
-    public void setHorarios(List<Horario> horarios) {
-        this.horarios = horarios;
-    }
+    public List<Horario> getHorarios() { return horarios; }
+    public void setHorarios(List<Horario> horarios) { this.horarios = horarios; }
 }
