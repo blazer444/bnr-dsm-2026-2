@@ -59,6 +59,28 @@ public class MatriculaService {
                 .toList();
     }
 
+    public List<MatriculaResponse> listarPorAluno(String alunoId) {
+        return repository.findByAlunoId(alunoId).stream()
+                .map(this::montarResposta)
+                .toList();
+    }
+
+    public List<MatriculaResponse> listarPorCurso(String cursoId) {
+        List<Turma> turmas = turmaRepository.findByCursoId(cursoId);
+
+        List<String> turmaIds = turmas.stream()
+                .map(turma -> turma.getId())
+                .toList();
+
+        if (turmaIds.isEmpty()) {
+            return List.of();
+        }
+
+        return repository.findByTurmaIdIn(turmaIds).stream()
+                .map(this::montarResposta)
+                .toList();
+    }
+
     public Optional<MatriculaResponse> buscarComDetalhes(String id) {
         return repository.findById(id)
                 .map(this::montarResposta);
