@@ -9,7 +9,7 @@ import br.edu.fatecfranca.api.models.Matricula;
 public interface MatriculaRepository
         extends MongoRepository<Matricula, String> {
 
-    List<Matricula> findByAlunoId(String alunoId);
+    List<Matricula> findByTurmaIdIn(List<String> turmaIds);
 
     boolean existsByAlunoId(String alunoId);
     

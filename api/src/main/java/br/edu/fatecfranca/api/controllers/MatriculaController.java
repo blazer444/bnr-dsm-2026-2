@@ -17,6 +17,8 @@ import br.edu.fatecfranca.api.dtos.MatriculaResponse;
 import br.edu.fatecfranca.api.models.Matricula;
 import br.edu.fatecfranca.api.services.MatriculaService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/matriculas")
 public class MatriculaController {
@@ -40,7 +42,7 @@ public class MatriculaController {
     }
 
     @PostMapping
-    public ResponseEntity<Matricula> criar(@RequestBody Matricula matricula) {
+    public ResponseEntity<Matricula> criar(@Valid @RequestBody Matricula matricula) {
         Matricula matriculaSalva = service.salvar(matricula);
 
         return ResponseEntity
@@ -51,7 +53,7 @@ public class MatriculaController {
     @PutMapping("/{id}")
     public ResponseEntity<Matricula> atualizar(
             @PathVariable String id,
-            @RequestBody Matricula matricula) {
+            @Valid @RequestBody Matricula matricula) {
 
         if (service.buscarPorId(id).isEmpty()) {
             return ResponseEntity.notFound().build();
