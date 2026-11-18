@@ -26,3 +26,5 @@ replay_pid*
 **/application.properties
 
 .vscode/
+
+api/src/main/resources/application.properties
